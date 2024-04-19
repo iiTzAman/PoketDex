@@ -24,7 +24,7 @@ struct PokemonFetcher {
         var pokemonData: [PokemonModel] = []
         
         var fetchURLComponent = URLComponents(url: baseURL.self, resolvingAgainstBaseURL: true)
-        let fetchURLQueryItem = URLQueryItem(name: "limit", value: "368")
+        let fetchURLQueryItem = URLQueryItem(name: "limit", value: "900")
         fetchURLComponent?.queryItems = [fetchURLQueryItem]
         
         guard let fetchURL = fetchURLComponent?.url else {
@@ -67,7 +67,7 @@ struct PokemonFetcher {
     func havePokemonInDatabase() -> Bool {
         let context = PersistenceController.shared.container.newBackgroundContext()
         let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id CONTAINS %@", [1, 368])
+        fetchRequest.predicate = NSPredicate(format: "id IN %@", [1, 900])
         
         do{
             let checkPokemon = try context.fetch(fetchRequest)

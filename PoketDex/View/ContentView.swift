@@ -11,37 +11,18 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Pokemon.id, ascending: true)],
-        animation: .default
-    ) private var pokedex: FetchedResults<Pokemon>
-    
     @StateObject var pokemonVM = PokemonViewModel(fetcher: PokemonFetcher())
     
     var body: some View {
         GeometryReader{ geo in
             NavigationStack {
                 ScrollView{
-                    LazyVGrid(columns: [GridItem(),GridItem(), GridItem()], content: {
-                        ForEach(pokedex){ pokemon in
-                            NavigationLink(value: pokemon){
-                                AsyncImage(url: pokemon.sprite) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                            }
-                            .frame(width: 50, height: 50)
-                            .padding()
-                            .overlay(RoundedRectangle.rect(cornerRadius: 20).stroke(lineWidth: 2))
-                        }
-                    })
+                    PokemonListView()
                 }
             }
             .padding()
         }
+        .preferredColorScheme(.light)
     }
 }
 

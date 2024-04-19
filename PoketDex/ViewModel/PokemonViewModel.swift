@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 @MainActor
 class PokemonViewModel: ObservableObject {
@@ -21,6 +22,8 @@ class PokemonViewModel: ObservableObject {
     
     private let fetcher: PokemonFetcher
     private let context = PersistenceController.shared.container.viewContext
+     
+    var pokedexData: [Pokemon] = []
     
     init(fetcher: PokemonFetcher) {
         self.fetcher = fetcher
@@ -57,15 +60,37 @@ class PokemonViewModel: ObservableObject {
                 pokemonDatabase.sprite = pokemon.sprite
                 pokemonDatabase.types = pokemon.types
                 pokemonDatabase.weight = Int16(pokemon.weight)
-                
+                pokedexData.append(pokemonDatabase)
                 try context.save()
             }
-            
             status = .success
         }catch{
             status = .failed(error: error)
         }
     }
     
-    
+    func filterSearch(searchText: String) -> [Pokemon]? {
+        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
+
+        if searchText.isEmpty {
+            do{
+                var fetchedPokemon = try context.fetch(fetchRequest)
+                fetchedPokemon.sort{$0.id < $1.id}
+                return fetchedPokemon
+            } catch {
+                print(error)
+            }
+        }
+            fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText)
+            
+            do{
+                var fetchedPokemon = try context.fetch(fetchRequest)
+                fetchedPokemon.sort{$0.id < $1.id}
+                return fetchedPokemon
+            }
+            catch{
+                print(error)
+            }
+        return nil
+    }
 }

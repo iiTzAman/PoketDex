@@ -60,9 +60,9 @@ struct PokemonDetailView: View {
                 }
                 .padding([.top, .leading, .trailing],20)
                 HStack {
-                    Text("Weight: \(pokemon.weight)")
+                    Text("Weight: \(pokemon.weight) kg")
                         .padding(.horizontal)
-                    Text("Height: \(pokemon.height)")
+                    Text("Height: \(pokemon.height) cm")
                     Spacer()
                 }
                 .padding(.top, 5)

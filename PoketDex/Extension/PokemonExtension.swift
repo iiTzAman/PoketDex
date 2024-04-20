@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Pokemon {
+extension Pokemon{
     var stats: [StatsModel] {
         [
             StatsModel(id:1, name: "hp", value: self.hp),
@@ -22,4 +22,5 @@ extension Pokemon {
     var highestStat: StatsModel {
         stats.max{$0.value < $1.value}!
     }
+    
 }

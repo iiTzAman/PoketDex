@@ -81,8 +81,8 @@ struct PokemonModel: Codable {
         let container = try decoder.container(keyedBy: PokemonKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        height = try container.decode(Int.self, forKey: .height)
-        weight = try container.decode(Int.self, forKey: .weight)
+        height = (try container.decode(Int.self, forKey: .height)) * 10
+        weight = (try container.decode(Int.self, forKey: .weight)) / 10
         favorite = false
         var statsContainer = try container.nestedUnkeyedContainer(forKey: .stats)
         

@@ -15,14 +15,24 @@ struct ContentView: View {
     
     var body: some View {
         GeometryReader{ geo in
-            NavigationStack {
-                ScrollView{
-                    PokemonListView()
+            TabView{
+                NavigationStack {
+                    ScrollView{
+                        PokemonListView()
+                    }
                 }
+                .padding()
+                .tabItem {
+                    Label("Pokdex", systemImage: "house")
+                }
+                FavoritesView()
+                    .tabItem {
+                        Label("Favorites", systemImage: "star")
+                    }
             }
-            .padding()
+            .preferredColorScheme(.light)
+            .accentColor(.black)
         }
-        .preferredColorScheme(.light)
     }
 }
 

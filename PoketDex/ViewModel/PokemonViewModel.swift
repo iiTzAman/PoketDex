@@ -22,12 +22,12 @@ class PokemonViewModel: ObservableObject {
     
     private let fetcher: PokemonFetcher
     private let context = PersistenceController.shared.container.viewContext
-     
+    
     var pokedexData: [Pokemon] = []
+    var pokeDex: [Pokemon] = []
     
     init(fetcher: PokemonFetcher) {
         self.fetcher = fetcher
-        
         Task{
             await getPokemon()
         }
@@ -35,14 +35,12 @@ class PokemonViewModel: ObservableObject {
     
     func getPokemon() async {
         status = .fetching
-        
         do{
             guard var pokemonData = try await fetcher.fetchAllPokemon() else {
-                status = .success
                 return
             }
-            pokemonData.sort{$0.id < $1.id}
             
+            pokemonData.sort{$0.id < $1.id}
             for pokemon in pokemonData {
                 let pokemonDatabase = Pokemon(context: context)
                 pokemonDatabase.id = Int16(pokemon.id)
@@ -69,28 +67,58 @@ class PokemonViewModel: ObservableObject {
         }
     }
     
-    func filterSearch(searchText: String) -> [Pokemon]? {
-        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
-
+    func filterSearch(searchText: String) -> [Pokemon] {
         if searchText.isEmpty {
+            return pokeDex
+        } else {
+            var newPokedex: [Pokemon] = []
+            for pokemon in pokeDex {
+                if pokemon.name!.localizedCaseInsensitiveContains(searchText) {
+                    newPokedex.append(pokemon)
+                }
+            }
+            pokeDex = newPokedex
+            return pokeDex
+        }
+    }
+    
+    func getAllTypes() -> [String] {
+        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
+        let fetchedData = try! context.fetch(fetchRequest)
+        var pokemonTypes: [String] = []
+        
+        for pokemon in fetchedData {
+            for types in pokemon.types! {
+                pokemonTypes.append(types)
+            }
+        }
+        let uniqueTypes = Set(pokemonTypes)
+        return Array(uniqueTypes).sorted()
+    }
+    
+    func filterByType(type: String){
+        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
+        if type.lowercased() == "all" {
             do{
-                var fetchedPokemon = try context.fetch(fetchRequest)
-                fetchedPokemon.sort{$0.id < $1.id}
-                return fetchedPokemon
+                let fetchedPokemon = try context.fetch(fetchRequest)
+                pokeDex = fetchedPokemon
             } catch {
                 print(error)
             }
-        }
-            fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText)
-            
+        } else {
             do{
-                var fetchedPokemon = try context.fetch(fetchRequest)
-                fetchedPokemon.sort{$0.id < $1.id}
-                return fetchedPokemon
+                pokeDex = []
+                let fetchedPokemon = try context.fetch(fetchRequest)
+                for pokemon in fetchedPokemon{
+                    for poketype in pokemon.types! {
+                        if poketype == type {
+                            pokeDex.append(pokemon)
+                        }
+                    }
+                }
+            }catch{
+                print("Error fetching pokemon for the \(type) ")
             }
-            catch{
-                print(error)
-            }
-        return nil
+        }
     }
 }

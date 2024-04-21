@@ -677,6 +677,7 @@
 		8180551F2BD22B0500BA2BB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8180551E2BD22B0500BA2BB3 /* Assets.xcassets */; };
 		818055242BD30D0100BA2BB3 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818055232BD30D0100BA2BB3 /* FilterView.swift */; };
 		818055262BD4369600BA2BB3 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818055252BD4369600BA2BB3 /* FavoritesView.swift */; };
+		818055282BD4BB0800BA2BB3 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818055272BD4BB0800BA2BB3 /* ListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1350,6 +1351,7 @@
 		8180551E2BD22B0500BA2BB3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		818055232BD30D0100BA2BB3 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		818055252BD4369600BA2BB3 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		818055272BD4BB0800BA2BB3 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1419,6 +1421,7 @@
 				81804FD32BCDC5D800BA2BB3 /* PoketDexApp.swift */,
 				81804FD52BCDC5D800BA2BB3 /* ContentView.swift */,
 				81804FF52BCEB76000BA2BB3 /* PokemonListView.swift */,
+				818055272BD4BB0800BA2BB3 /* ListView.swift */,
 				818055232BD30D0100BA2BB3 /* FilterView.swift */,
 				81804FF72BCED41B00BA2BB3 /* PokemonDetailView.swift */,
 				818055252BD4369600BA2BB3 /* FavoritesView.swift */,
@@ -2842,6 +2845,7 @@
 				81804FF62BCEB76000BA2BB3 /* PokemonListView.swift in Sources */,
 				81804FF02BCDEEDE00BA2BB3 /* PokemonModel.swift in Sources */,
 				81804FF22BCE03AA00BA2BB3 /* PokemonFetcher.swift in Sources */,
+				818055282BD4BB0800BA2BB3 /* ListView.swift in Sources */,
 				81804FDD2BCDC5D900BA2BB3 /* Persistence.swift in Sources */,
 				81804FEE2BCDEBA500BA2BB3 /* AllPokemonModel.swift in Sources */,
 				818055152BD0AD9900BA2BB3 /* SoundManager.swift in Sources */,

@@ -19,9 +19,6 @@ struct FilterView: View {
     @Binding var currentType: String
     @Binding var filterOn: Bool
     
-    
-    
-    
     var body: some View {
         HStack{
             VStack{
@@ -32,24 +29,31 @@ struct FilterView: View {
                         .fontWeight(.bold)
                     Spacer()
                     Button{
-                        withAnimation{ 
+                        withAnimation(.easeInOut(duration: 1)){ 
                             filterOn.toggle()
                             currentType = "all"
                         }
                     } label: {
-                        Image(systemName: "xmark")
-                            .padding(.trailing,15)
-                            .foregroundStyle(.black)
+                        HStack {
+                            Text("Clear")
+                                .font(.caption)
+                            Image(systemName: "xmark")
+                                .font(.caption)
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal,15)
+                        .padding(.vertical,8)
+                        .background(currentType == "all" ? .gray : .black)
+                        .padding(.trailing,8)
                     }
-                    
                 }
                 .padding(.bottom,10)
-                
                 .padding(.leading,10)
+                
                 LazyVGrid(columns: [GridItem(),GridItem(),GridItem(), GridItem()], content: {
                     ForEach(allTypes, id: \.self){ type in
                         Button{
-                            withAnimation{
+                            withAnimation(.easeInOut(duration: 1)){
                                 currentType = type
                             }
                         }label: {
@@ -61,7 +65,7 @@ struct FilterView: View {
                                     .foregroundStyle(.white)
                                     .frame(width: 70)
                                     .background(.pink)
-                                    .overlay(RoundedRectangle(cornerRadius: 5).stroke().fill(.gray))
+                                    .overlay(RoundedRectangle(cornerRadius: 3).stroke().fill(.gray))
                                     .clipShape(.rect(cornerRadius: 10))
                             } else {
                                 Text("\(type.capitalized)")
@@ -71,16 +75,13 @@ struct FilterView: View {
                                     .frame(width: 70)
                                     .background(.white)
                                     .overlay(RoundedRectangle(cornerRadius: 10).stroke().fill(.gray))
-
                             }
                         }
-                        
                     }
                 })
                 Divider()
                     .padding(.vertical,10)
             }
-            
         }
     }
 }

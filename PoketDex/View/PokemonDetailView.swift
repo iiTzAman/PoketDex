@@ -8,6 +8,7 @@
 import SwiftUI
 import Charts
 
+
 struct PokemonDetailView: View {
     @EnvironmentObject var pokemon: Pokemon
     @Environment(\.managedObjectContext) private var viewContext
@@ -32,8 +33,6 @@ struct PokemonDetailView: View {
                     SoundManager.instance.playSound(for: Int(pokemon.id))
                 }
                 .offset(y: 55)
-
-                
             }
             
             VStack {
@@ -48,7 +47,6 @@ struct PokemonDetailView: View {
                         favoritePokemon = pokemon.favorite
                         do{
                             try viewContext.save()
-                            print("pokemon added to favorites")
                         }catch{
                             print(error)
                         }

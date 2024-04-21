@@ -9,11 +9,6 @@ import SwiftUI
 
 struct PokemonListView: View {
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Pokemon.id, ascending: true)],
-        animation: .default
-    ) private var pokedex: FetchedResults<Pokemon>
-    
     @State var searchText: String = ""
     @State var filterOn = false
     @State var currentType = "all"
@@ -31,54 +26,70 @@ struct PokemonListView: View {
             return pokemonVM.pokeDex
         }
     }
+    var fetchingStatus: Bool {
+        switch pokemonVM.status{
+        case .fetching:
+            return true
+        default:
+            return false
+        }
+    }
     
     
     var body: some View {
         VStack {
-            if filterOn {
-                FilterView(currentType: $currentType, filterOn: $filterOn)
-            }
-            VStack {
-                LazyVGrid(columns: [GridItem(),GridItem(), GridItem()], content: {
-                    ForEach(filteredPokemon){ pokemon in
-                        NavigationLink(value: pokemon){
-                            ZStack(alignment:.bottom){
-                                AsyncImage(url: pokemon.icon) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                                .padding(.bottom)
-                                Text("\(pokemon.name!.capitalized)")
-                                    .font(.caption2)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.black)
-                                    .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .frame(width: 80, height: 80)
-                        .padding()
-                        .overlay(RoundedRectangle.rect(cornerRadius: 20).stroke(lineWidth: 0.5))
-                    }
-                })
-                .navigationTitle("Pokedex")
-                .navigationBarTitleDisplayMode(.inline)
-                .searchable(text: $searchText)
-                .navigationDestination(for: Pokemon.self) { pokemon in
-                    PokemonDetailView()
-                        .environmentObject(pokemon)
+            if fetchingStatus{
+                VStack{
+                    Text("Fetching Pokemon data...")
+                        .foregroundStyle(.secondary)
+                    ProgressView()
                 }
-                .toolbar{
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button{
-                            withAnimation{
-                                filterOn.toggle()
+            }else{
+                if filterOn {
+                    FilterView(currentType: $currentType, filterOn: $filterOn)
+                }
+                VStack {
+                    LazyVGrid(columns: [GridItem(),GridItem(), GridItem()], content: {
+                        ForEach(filteredPokemon){ pokemon in
+                            NavigationLink(value: pokemon){
+                                ZStack(alignment:.bottom){
+                                    AsyncImage(url: pokemon.sprite) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .padding(.bottom)
+                                    Text("\(pokemon.name!.capitalized)")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.black)
+                                        .frame(maxWidth: .infinity)
+                                }
                             }
-                        } label: {
-                            Image(systemName: "slider.horizontal.3")
-                                .tint(filterOn ? .pink : .black)
+                            .frame(width: 80, height: 80)
+                            .padding()
+                            .overlay(RoundedRectangle.rect(cornerRadius: 20).stroke(lineWidth: 0.5))
+                        }
+                    })
+                    .navigationTitle("Pokedex")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .searchable(text: $searchText)
+                    .navigationDestination(for: Pokemon.self) { pokemon in
+                        PokemonDetailView()
+                            .environmentObject(pokemon)
+                    }
+                    .toolbar{
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button{
+                                withAnimation{
+                                    filterOn.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "slider.horizontal.3")
+                                    .tint(filterOn ? .pink : .black)
+                            }
                         }
                     }
                 }

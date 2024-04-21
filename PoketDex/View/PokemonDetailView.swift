@@ -12,6 +12,8 @@ struct PokemonDetailView: View {
     @EnvironmentObject var pokemon: Pokemon
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State var favoritePokemon = false
+    
     var body: some View {
         ScrollView{
             ZStack {
@@ -43,8 +45,10 @@ struct PokemonDetailView: View {
                     
                     Button{
                         pokemon.favorite.toggle()
+                        favoritePokemon = pokemon.favorite
                         do{
                             try viewContext.save()
+                            print("pokemon added to favorites")
                         }catch{
                             print(error)
                         }

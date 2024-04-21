@@ -19,6 +19,9 @@ struct FilterView: View {
     @Binding var currentType: String
     @Binding var filterOn: Bool
     
+    
+    
+    
     var body: some View {
         HStack{
             VStack{

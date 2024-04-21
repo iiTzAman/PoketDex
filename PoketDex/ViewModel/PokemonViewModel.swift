@@ -36,30 +36,29 @@ class PokemonViewModel: ObservableObject {
     func getPokemon() async {
         status = .fetching
         do{
-            guard var pokemonData = try await fetcher.fetchAllPokemon() else {
-                return
-            }
-            
-            pokemonData.sort{$0.id < $1.id}
-            for pokemon in pokemonData {
-                let pokemonDatabase = Pokemon(context: context)
-                pokemonDatabase.id = Int16(pokemon.id)
-                pokemonDatabase.attack = Int16(pokemon.attack)
-                pokemonDatabase.defense = Int16(pokemon.defense)
-                pokemonDatabase.favorite = pokemon.favorite
-                pokemonDatabase.height = Int16(pokemon.height)
-                pokemonDatabase.hp = Int16(pokemon.hp)
-                pokemonDatabase.icon = pokemon.icon
-                pokemonDatabase.moves = pokemon.moves
-                pokemonDatabase.name = pokemon.name
-                pokemonDatabase.specialAttack = Int16(pokemon.specialAttack)
-                pokemonDatabase.specialDefense = Int16(pokemon.specialDefense)
-                pokemonDatabase.speed = Int16(pokemon.speed)
-                pokemonDatabase.sprite = pokemon.sprite
-                pokemonDatabase.types = pokemon.types
-                pokemonDatabase.weight = Int16(pokemon.weight)
-                pokedexData.append(pokemonDatabase)
-                try context.save()
+            if var pokemonData = try await fetcher.fetchAllPokemon() {
+                pokemonData.sort{$0.id < $1.id}
+                for pokemon in pokemonData {
+                    let pokemonDatabase = Pokemon(context: context)
+                    pokemonDatabase.id = Int16(pokemon.id)
+                    pokemonDatabase.attack = Int16(pokemon.attack)
+                    pokemonDatabase.defense = Int16(pokemon.defense)
+                    pokemonDatabase.favorite = pokemon.favorite
+                    pokemonDatabase.height = Int16(pokemon.height)
+                    pokemonDatabase.hp = Int16(pokemon.hp)
+                    pokemonDatabase.icon = pokemon.icon
+                    pokemonDatabase.moves = pokemon.moves
+                    pokemonDatabase.name = pokemon.name
+                    pokemonDatabase.specialAttack = Int16(pokemon.specialAttack)
+                    pokemonDatabase.specialDefense = Int16(pokemon.specialDefense)
+                    pokemonDatabase.speed = Int16(pokemon.speed)
+                    pokemonDatabase.sprite = pokemon.sprite
+                    pokemonDatabase.types = pokemon.types
+                    pokemonDatabase.weight = Int16(pokemon.weight)
+                    pokedexData.append(pokemonDatabase)
+                    try context.save()
+                }
+                status = .success
             }
             status = .success
         }catch{
@@ -94,6 +93,19 @@ class PokemonViewModel: ObservableObject {
         }
         let uniqueTypes = Set(pokemonTypes)
         return Array(uniqueTypes).sorted()
+    }
+    
+    func getAllFavoritePokemon() -> [Pokemon]{
+        let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
+        let fetchedData = try! context.fetch(fetchRequest)
+        var favoritePokemon: [Pokemon] = []
+        for pokemon in fetchedData {
+            if pokemon.favorite{
+                favoritePokemon.append(pokemon)
+                print("\(pokemon.favorite)")
+            }
+        }
+        return favoritePokemon
     }
     
     func filterByType(type: String){
